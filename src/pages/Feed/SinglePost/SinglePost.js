@@ -1,40 +1,64 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import Image from '../../../components/Image/Image';
-import './SinglePost.css';
+import Image from "../../../components/Image/Image";
+import "./SinglePost.css";
 
 class SinglePost extends Component {
   state = {
-    title: '',
-    author: '',
-    date: '',
-    image: '',
-    content: ''
+    title: "",
+    author: "",
+    date: "",
+    image: "",
+    content: "",
   };
 
   componentDidMount() {
     const postId = this.props.match.params.postId;
-    fetch('http://localhost:8080/feed/post/'+ postId , {
-      headers : {
-        Authorization: 'Bearer ' + this.props.token
+    const graphqlQuery = {
+      query: `{
+      getPostById(id: "${postId}") {
+        title
+        content
+        createdAt
+        imageUrl
+        creator{
+          name
+        }
       }
+    }`,
+    };
+
+    fetch("http://localhost:8080/graphql" , //+ postId, 
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + this.props.token,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(graphqlQuery),
     })
-      .then(res => {
+      .then((res) => {
+        /*
         if (res.status !== 200) {
           throw new Error('Failed to fetch status');
         }
+        */
         return res.json();
       })
-      .then(resData => {
+      .then((resData) => {
+        if (resData.errors) {
+          throw new Error("Failed to fetch the Post.");
+        }
+        console.log(resData)
         this.setState({
-          title: resData.post.title,
-          author: resData.post.creator.name,
-          date: new Date(resData.post.createdAt).toLocaleDateString('en-US'),
-          content: resData.post.content,
-          image: "http://localhost:8080/" + resData.post.imageUrl
+          title: resData.data.getPostById.title,
+          author: resData.data.getPostById.creator.name,
+          date: new Date(resData.data.getPostById.createdAt).toLocaleDateString("en-US"),
+          content: resData.data.getPostById.content,
+          image: "http://localhost:8080/" + resData.data.getPostById.imageUrl,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }

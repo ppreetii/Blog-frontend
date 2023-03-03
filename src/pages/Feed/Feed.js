@@ -228,7 +228,11 @@ class Feed extends Component {
     })
       .then((res) => res.json())
       .then((fileResData) => {
-        const imageUrl = fileResData.filePath.replace('\\', '/');
+        fileResData.filePath = fileResData.filePath
+          ? fileResData.filePath.replace("\\", "/")
+          : null;
+
+        const imageUrl = fileResData.filePath;
 
         let graphqlQuery = {
           query: `
@@ -246,6 +250,27 @@ class Feed extends Component {
           }
           `,
         };
+
+        if (this.state.editPost) {
+          graphqlQuery = {
+            query: `
+              mutation {
+                updatePost(
+                  id: "${this.state.editPost._id}",
+                  postInput: {title: "${postData.title}", content: "${postData.content}", imageUrl: "${imageUrl}"}) {
+                _id
+                title
+                content
+                imageUrl
+                creator {
+                  name
+                }
+                createdAt
+              }
+            }
+            `,
+          };
+        }
         return fetch("http://localhost:8080/graphql", {
           method: "POST",
           // body: formData,
@@ -271,13 +296,17 @@ class Feed extends Component {
         if (resData.errors) {
           throw new Error("Post Creation failed!");
         }
+        let postAction = "createPost";
+        if (this.state.editPost) {
+          postAction = "updatePost";
+        }
         const post = {
-          _id: resData.data.createPost._id,
-          title: resData.data.createPost.title,
-          content: resData.data.createPost.content,
-          creator: resData.data.createPost.creator,
-          createdAt: resData.data.createPost.createdAt,
-          imagePath: resData.data.createPost.imageUrl,
+          _id: resData.data[postAction]._id,
+          title: resData.data[postAction].title,
+          content: resData.data[postAction].content,
+          creator: resData.data[postAction].creator,
+          createdAt: resData.data[postAction].createdAt,
+          imagePath: resData.data[postAction].imageUrl,
         };
         /*
         this.setState(prevState => {
