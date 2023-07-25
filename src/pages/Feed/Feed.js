@@ -32,7 +32,7 @@ class Feed extends Component {
       `,
     };
     // fetch("http://localhost:8080/auth/status", {
-    fetch("http://localhost:8080/graphql", {
+    fetch("https://blog-gl4c.onrender.com/graphql", {
       method: "POST",
       headers: {
         Authorization: "Bearer " + this.props.token,
@@ -137,7 +137,7 @@ class Feed extends Component {
       },
     };
     // fetch('http://localhost:8080/feed/posts?page=' + page , {
-    fetch("http://localhost:8080/graphql", {
+    fetch("https://blog-gl4c.onrender.com/graphql", {
       method: "POST",
       headers: {
         Authorization: "Bearer " + this.props.token,
@@ -186,7 +186,7 @@ class Feed extends Component {
       },
     };
     // fetch("http://localhost:8080/auth/status", {
-    fetch("http://localhost:8080/graphql", {
+    fetch("https://blog-gl4c.onrender.com/graphql", {
       // method: "PATCH",
       method: "POST",
       headers: {
@@ -255,7 +255,7 @@ class Feed extends Component {
     }
     */
 
-    fetch("http://localhost:8080/post-image", {
+    fetch("https://blog-gl4c.onrender.com/post-image", {
       method: "PUT",
       body: formData,
       headers: {
@@ -319,7 +319,7 @@ class Feed extends Component {
             },
           };
         }
-        return fetch("http://localhost:8080/graphql", {
+        return fetch("https://blog-gl4c.onrender.com/graphql", {
           method: "POST",
           // body: formData,
           body: JSON.stringify(graphqlQuery),
@@ -385,7 +385,7 @@ class Feed extends Component {
             isEditing: false,
             editPost: null,
             editLoading: false,
-            totalPosts : updatedTotalPosts
+            totalPosts: updatedTotalPosts,
           };
         });
       })
@@ -417,7 +417,7 @@ class Feed extends Component {
       },
     };
     // fetch("http://localhost:8080/feed/post/" + postId, {
-    fetch("http://localhost:8080/graphql", {
+    fetch("https://blog-gl4c.onrender.com/graphql", {
       // method: "DELETE",
       method: "POST",
       headers: {

@@ -31,15 +31,17 @@ class SinglePost extends Component {
     }
     };
 
-    fetch("http://localhost:8080/graphql" , //+ postId, 
-    {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + this.props.token,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(graphqlQuery),
-    })
+    fetch(
+      "https://blog-gl4c.onrender.com/graphql", //+ postId,
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + this.props.token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(graphqlQuery),
+      }
+    )
       .then((res) => {
         /*
         if (res.status !== 200) {
@@ -52,13 +54,17 @@ class SinglePost extends Component {
         if (resData.errors) {
           throw new Error("Failed to fetch the Post.");
         }
-        console.log(resData)
+
         this.setState({
           title: resData.data.getPostById.title,
           author: resData.data.getPostById.creator.name,
-          date: new Date(resData.data.getPostById.createdAt).toLocaleDateString("en-US"),
+          date: new Date(resData.data.getPostById.createdAt).toLocaleDateString(
+            "en-US"
+          ),
           content: resData.data.getPostById.content,
-          image: "http://localhost:8080/" + resData.data.getPostById.imageUrl,
+          image:
+            "https://blog-gl4c.onrender.com/" +
+            resData.data.getPostById.imageUrl,
         });
       })
       .catch((err) => {
